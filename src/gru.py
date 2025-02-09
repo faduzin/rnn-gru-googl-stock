@@ -19,17 +19,26 @@ random.seed(42)
 
 def create_dataset(df, look_back=10):
     dataX, dataY = [], []
-    for i in range(df.shape[0]-look_back):
-        dataX.append(df[i:(i+look_back), :5])
-        dataY.append(df[i + look_back, 3])
+    try:
+        for i in range(df.shape[0]-look_back):
+            dataX.append(df[i:(i+look_back), :5])
+            dataY.append(df[i + look_back, 3])
+        print('Dataset created successfully.')
+    except Exception as e:
+        print(f'Error creating dataset: {e}')
     return dataX, dataY
 
 
-def build_rnn_gru(input_shape, output_shape):
+def build_rnn_gru(input_shape, output_shape, double_gru=False, num_units=15):
     model = keras.Sequential()
-    model.add(layers.GRU(15, input_shape=input_shape, activation="tanh", recurrent_activation="sigmoid", return_sequences=True))
-    model.add(layers.Dropout(0.2))
-    model.add(layers.GRU(15, activation="tanh", recurrent_activation="sigmoid"))
+    if double_gru:
+        model.add(layers.GRU(num_units, input_shape=input_shape, activation="tanh", recurrent_activation="sigmoid", return_sequences=True))
+        model.add(layers.Dropout(0.2))
+        model.add(layers.GRU(num_units, activation="tanh", recurrent_activation="sigmoid"))
+        model.add(layers.Dropout(0.2))
+    else:
+        model.add(layers.GRU(num_units, input_shape=input_shape, activation="tanh", recurrent_activation="sigmoid"))
+        model.add(layers.Dropout(0.2))
     model.add(layers.Dense(output_shape))
     model.compile(optimizer='adam', loss='mean_squared_error')
     model.summary()
@@ -47,9 +56,11 @@ def plot_loss(history):
     plt.show()
 
 
-def plot_predictions(y_true, y_pred):
+def plot_predictions(y_true, predictions):
     plt.figure(figsize=(10, 6))
     plt.plot(y_true, label='True')
-    plt.plot(y_pred, label='Predicted')
+    for pred in predictions:
+        plt.plot(pred[0], label=pred[1])
+    plt.title('Model predictions')
     plt.legend()
     plt.show()
