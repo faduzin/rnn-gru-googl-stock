@@ -1,196 +1,202 @@
-# Google Stock Price Prediction using GRU RNN
+# Previsão do Preço das Ações do Google usando GRU RNN
 
-This project leverages a Gated Recurrent Unit (GRU) based Recurrent Neural Network (RNN) to analyze and forecast Google's stock prices. The model is designed to capture the temporal dependencies in historical financial data, enabling us to uncover market trends and volatility patterns over time.
+*To access the english version [click here](README.eng.md)*
 
-## Table of Contents
+Este projeto utiliza uma Rede Neural Recorrente (RNN) baseada em Gated Recurrent Unit (GRU) para analisar e prever os preços das ações do Google. O modelo foi projetado para capturar as dependências temporais presentes em dados financeiros históricos, permitindo revelar tendências de mercado e padrões de volatilidade ao longo do tempo.
 
-1. [Background](#background)
-2. [What is a GRU RNN?](#what-is-a-gru-rnn)
-3. [Tools I Used](#tools-i-used)
-4. [The Process](#the-process)
-5. [Data Overview and Analysis](#data-overview-and-analysis)
-6. [The Analysis](#the-analysis)
-7. [What I Learned](#what-i-learned)
-8. [Skills Practiced](#skills-practiced)
-9. [Conclusion](#conclusion)
-10. [Contact](#contact)
-11. [Repository Structure](#repository-structure)
+## Índice
 
-## Background
+1. [Contexto](#contexto)
+2. [O que é uma RNN com GRU?](#o-que-é-uma-rnn-com-gru)
+3. [Ferramentas Utilizadas](#ferramentas-utilizadas)
+4. [O Processo](#o-processo)
+5. [Visão Geral dos Dados e Análise](#visão-geral-dos-dados-e-análise)
+6. [A Análise](#a-análise)
+7. [O Que Aprendi](#o-que-aprendi)
+8. [Habilidades Praticadas](#habilidades-praticadas)
+9. [Conclusão](#conclusão)
+10. [Contato](#contato)
+11. [Contribuições](#contribuições)
+12. [Estrutura do Repositório](#estrutura-do-repositório)
 
-This project was created as part of an exploratory analysis into financial time-series forecasting. By applying a GRU RNN model to Google's historical stock data, the goal is to predict future stock trends and provide insights into the market dynamics between 2006 and 2018.
+## Contexto
 
-## What is a GRU RNN?
+Este projeto foi criado como parte de uma análise exploratória de previsão de séries temporais financeiras. Ao aplicar um modelo GRU RNN aos dados históricos de ações do Google, o objetivo é prever tendências futuras do mercado e fornecer insights sobre a dinâmica do mercado entre 2006 e 2018.
 
-### Recurrent Neural Networks (RNNs)
-Recurrent Neural Networks (RNNs) are a class of neural networks particularly suited for processing sequential data. Unlike traditional feedforward neural networks, RNNs have loops within their architecture, allowing them to maintain a hidden state that persists across time steps. This "memory" enables RNNs to understand context and temporal dynamics, which is essential for tasks such as time-series forecasting, natural language processing, and speech recognition.
+## O que é uma RNN com GRU?
 
-However, traditional RNNs often struggle with learning long-term dependencies due to issues like the vanishing gradient problem. As information is propagated back through many layers during training, gradients can diminish, making it hard for the network to learn from earlier inputs in a sequence.
+### Redes Neurais Recorrentes (RNNs)
+Redes Neurais Recorrentes (RNNs) são uma classe de redes neurais especialmente adequadas para processar dados sequenciais. Diferentemente das redes neurais feedforward tradicionais, as RNNs possuem ciclos em sua arquitetura, permitindo que mantenham um estado oculto que persiste ao longo dos passos do tempo. Essa "memória" possibilita que as RNNs compreendam o contexto e as dinâmicas temporais, essenciais para tarefas como previsão de séries temporais, processamento de linguagem natural e reconhecimento de fala.
+
+No entanto, as RNNs tradicionais frequentemente enfrentam dificuldades para aprender dependências de longo prazo devido a problemas como o desaparecimento do gradiente. Conforme a informação é propagada de volta por diversas camadas durante o treinamento, os gradientes podem se dissipar, dificultando o aprendizado a partir de entradas anteriores em uma sequência.
 
 ### Gated Recurrent Units (GRUs)
-GRUs are an advanced variant of RNNs designed to overcome some of these limitations. They incorporate gating mechanisms that regulate the flow of information through the network:
+GRUs são uma variante avançada das RNNs, projetada para superar algumas das limitações das RNNs convencionais. Elas incorporam mecanismos de *gate* que regulam o fluxo de informação através da rede:
 
-- **Update Gate:**  
-  Controls how much of the previous hidden state should be carried forward to the current state. This gate allows the model to retain important long-term information while discarding less relevant details.
+- **Porta de Atualização (Update Gate):**  
+  Controla quanto do estado oculto anterior deve ser levado para o estado atual. Essa porta permite que o modelo retenha informações importantes de longo prazo, descartando detalhes menos relevantes.
 
-- **Reset Gate:**  
-  Determines how to combine the new input with the previous hidden state. By selectively "resetting" the hidden state, the reset gate enables the network to forget irrelevant past information and better adapt to new inputs.
+- **Porta de Reset (Reset Gate):**  
+  Determina como combinar a nova entrada com o estado oculto anterior. Ao "resetar" seletivamente o estado oculto, essa porta possibilita que a rede esqueça informações passadas irrelevantes e se adapte melhor às novas entradas.
 
-The GRU architecture simplifies the design compared to other gated models (like LSTMs) while still effectively capturing both short-term and long-term dependencies. This balance makes GRUs particularly effective for forecasting tasks, such as predicting stock prices where both recent trends and historical context are important.
+A arquitetura GRU simplifica o design em comparação com outros modelos com *gate* (como os LSTMs), mantendo a capacidade de capturar efetivamente dependências de curto e longo prazo. Esse equilíbrio torna as GRUs particularmente eficazes para tarefas de previsão, como a previsão de preços de ações, onde tanto as tendências recentes quanto o contexto histórico são relevantes.
 
+## Ferramentas Utilizadas
 
-## Tools I Used
-
-- **Programming Language:** Python 3.12.9  
-- **Deep Learning Frameworks:** TensorFlow/Keras (or PyTorch)  
-- **Data Manipulation:** Pandas, NumPy  
-- **Data Visualization:** Matplotlib, Seaborn  
-- **Preprocessing & Metrics:** Scikit-learn  
+- **Linguagem de Programação:** Python 3.12.9  
+- **Frameworks de Deep Learning:** TensorFlow/Keras (ou PyTorch)  
+- **Manipulação de Dados:** Pandas, NumPy  
+- **Visualização de Dados:** Matplotlib, Seaborn  
+- **Pré-processamento & Métricas:** Scikit-learn  
 - **IDE:** Visual Studio Code (VSCode)
 
-## The Process
+## O Processo
 
-1. **Data Preprocessing:**  
-   - Data cleaning and normalization  
-   - Splitting the dataset into training and testing subsets
+1. **Pré-processamento dos Dados:**  
+   - Limpeza e normalização dos dados  
+   - Divisão do conjunto de dados em subconjuntos de treinamento e teste
 
-2. **Model Building:**  
-   - Designing a GRU-based RNN architecture  
-   - Compiling the model with an appropriate optimizer and loss function
+2. **Construção do Modelo:**  
+   - Projeto da arquitetura RNN baseada em GRU  
+   - Compilação do modelo com otimizador e função de perda apropriados
 
-3. **Training:**  
-   - Feeding historical stock data into the model  
-   - Tuning hyperparameters to optimize performance
+3. **Treinamento:**  
+   - Alimentação dos dados históricos de ações no modelo  
+   - Ajuste dos hiperparâmetros para otimizar o desempenho
 
-4. **Evaluation:**  
-   - Assessing the model using metrics such as Mean Squared Error (MSE)  
-   - Visualizing the predicted versus actual stock prices
+4. **Avaliação:**  
+   - Avaliação do modelo utilizando métricas como o Erro Quadrático Médio (MSE)  
+   - Visualização dos preços previstos versus os preços reais
 
-5. **Prediction:**  
-   - Generating forecasts to analyze future stock trends
+5. **Predição:**  
+   - Geração de previsões para analisar tendências futuras do mercado
 
-## Data Overview and Analysis
+## Visão Geral dos Dados e Análise
 
-The dataset used in this project contains historical stock price data for Google (GOOGL) covering the period from January 1, 2006, to January 1, 2018. Below is an overview of the dataset and key insights from the exploratory data analysis (EDA):
+O conjunto de dados utilizado neste projeto contém dados históricos de preços das ações do Google (GOOGL), cobrindo o período de 1º de janeiro de 2006 a 1º de janeiro de 2018. A seguir, uma visão geral do conjunto de dados e os principais insights obtidos na Análise Exploratória dos Dados (EDA):
 
-### Dataset Overview
+### Visão Geral do Conjunto de Dados
 
-- **Date:** Trading date
-- **Open:** Opening price of the stock on a given day
-- **High:** Highest price recorded during the day
-- **Low:** Lowest price recorded during the day
-- **Close:** Closing price of the stock
-- **Volume:** Number of shares traded during the day
-- **Name:** Stock ticker symbol (GOOGL)
+- **Data:** Data de negociação  
+- **Open:** Preço de abertura da ação no dia  
+- **High:** Maior preço registrado durante o dia  
+- **Low:** Menor preço registrado durante o dia  
+- **Close:** Preço de fechamento da ação  
+- **Volume:** Número de ações negociadas durante o dia  
+- **Name:** Símbolo da ação (GOOGL)
 
-### Exploratory Data Analysis (EDA)
+### Análise Exploratória dos Dados (EDA)
 
-- **No Missing Values:**  
-  All columns are fully populated, eliminating the need for handling missing data.
+- **Sem Valores Faltantes:**  
+  Todas as colunas estão completamente preenchidas, eliminando a necessidade de tratamento de dados faltantes.
 
-- **Total Trading Days:**  
-  The dataset comprises 3,019 daily records.
+- **Total de Dias de Negociação:**  
+  O conjunto de dados contém 3.019 registros diários.
 
-- **Stock Price Ranges:**  
-  - *Minimum Close Price:* $128.85  
-  - *Maximum Close Price:* $1,085.09  
-  - *Mean Close Price:* $428.04
+- **Intervalo de Preços das Ações:**  
+  - *Preço de Fechamento Mínimo:* $128.85  
+  - *Preço de Fechamento Máximo:* $1,085.09  
+  - *Preço de Fechamento Médio:* $428.04
 
-- **Stock Volatility:**  
-  The closing price has a standard deviation of $236.34, indicating significant fluctuations.
+- **Volatilidade das Ações:**  
+  O preço de fechamento apresenta um desvio padrão de $236.34, indicando flutuações significativas.
 
-- **Trading Volume:**  
-  Daily trading volumes vary considerably, with an average of 3.55 million shares and a peak of 41.18 million shares.
+- **Volume de Negociação:**  
+  Os volumes diários de negociação variam consideravelmente, com uma média de 3.55 milhões de ações e um pico de 41.18 milhões.
 
-- **Trend Analysis (2006-2018):**  
-  The overall trend shows consistent long-term growth in Google's stock price, punctuated by periods of high volatility. Notably, there is a sharp increase from 2015 to 2018, reflecting strong market confidence.
+- **Análise de Tendência (2006-2018):**  
+  A tendência geral mostra um crescimento consistente a longo prazo no preço das ações do Google, intercalado por períodos de alta volatilidade. Notavelmente, há um aumento acentuado de 2015 a 2018, refletindo forte confiança do mercado.
 
-## The Analysis
+## A Análise
 
-This section describes the experimental analysis where four different GRU model configurations were trained and compared. The models differ by the number of GRU layers and the number of units per layer:
+Esta seção descreve a análise experimental onde foram treinadas e comparadas quatro configurações diferentes de modelos GRU. Os modelos diferem pelo número de camadas GRU e pela quantidade de unidades em cada camada:
 
-- **Single GRU Layer with 15 Units (single_15):**  
-  This model has a single GRU layer containing 15 units. It achieved the closest performance to the real values.
+- **Única Camada GRU com 15 Unidades (single_15):**  
+  Este modelo possui uma única camada GRU contendo 15 unidades. Obteve o desempenho mais próximo dos valores reais.
 
-- **Single GRU Layer with 50 Units (single_50):**  
-  A single GRU layer with 50 units. Its performance was very close to the single_15 model, indicating that increasing the number of units slightly did not significantly alter the outcome in this case.
+- **Única Camada GRU com 50 Unidades (single_50):**  
+  Um modelo com uma única camada GRU de 50 unidades. Seu desempenho foi muito semelhante ao do modelo single_15, indicando que o aumento no número de unidades não alterou significativamente o resultado neste caso.
 
-- **Double GRU Layers with 15 Units Each (double_15):**  
-  This configuration stacks two GRU layers with 15 units each. While the predictions were a little less accurate compared to the single-layer models, the output lines were more stable, suggesting better smoothing of the time series.
+- **Duas Camadas GRU com 15 Unidades Cada (double_15):**  
+  Esta configuração empilha duas camadas GRU com 15 unidades cada. Embora as previsões tenham sido um pouco menos precisas em comparação com os modelos de camada única, as linhas de previsão foram mais estáveis, sugerindo uma melhor suavização da série temporal.
 
-- **Double GRU Layers with 50 Units Each (double_50):**  
-  A deeper model with two GRU layers, each having 50 units. This model performed the worst, with predictions considerably far from the actual values.
+- **Duas Camadas GRU com 50 Unidades Cada (double_50):**  
+  Um modelo mais profundo, com duas camadas GRU, cada uma com 50 unidades. Este modelo apresentou o pior desempenho, com previsões consideravelmente afastadas dos valores reais.
 
-### Loss Curves and Model Predictions
+### Curvas de Perda e Previsões dos Modelos
 
-Below are placeholders for the images of the loss curves for each model configuration (in the following order):
+A seguir, seguem os espaços reservados para as imagens das curvas de perda de cada configuração de modelo (na seguinte ordem):
 
-1. **Single GRU Layer with 15 Units (single_15) Loss Curve:**  
-   ![Loss Curve - Single_15](<assets\single_layer_15_gru_loss.png>)
+1. **Curva de Perda - Única Camada GRU com 15 Unidades (single_15):**  
+   ![Curva de Perda - Single_15](<assets\single_layer_15_gru_loss.png>)
 
-2. **Single GRU Layer with 50 Units (single_50) Loss Curve:**  
-   ![Loss Curve - Single_50](<assets\single_layer_50_gru_loss.png>)
+2. **Curva de Perda - Única Camada GRU com 50 Unidades (single_50):**  
+   ![Curva de Perda - Single_50](<assets\single_layer_50_gru_loss.png>)
 
-3. **Double GRU Layers with 15 Units (double_15) Loss Curve:**  
-   ![Loss Curve - Double_15](<assets\double_layer_15_gru_loss.png>)
+3. **Curva de Perda - Duas Camadas GRU com 15 Unidades (double_15):**  
+   ![Curva de Perda - Double_15](<assets\double_layer_15_gru_loss.png>)
 
-4. **Double GRU Layers with 50 Units (double_50) Loss Curve:**  
-   ![Loss Curve - Double_50](<assets\double_layer_50_gru_loss.png>)
+4. **Curva de Perda - Duas Camadas GRU com 50 Unidades (double_50):**  
+   ![Curva de Perda - Double_50](<assets\double_layer_50_gru_loss.png>)
 
-Finally, the following image shows a comparative graph with the true values and the predictions from each model:
+Por fim, a imagem a seguir mostra um gráfico comparativo com os valores reais e as previsões de cada modelo:
 
-- **True Values vs. Predictions:**  
-  ![Predictions Comparison](<assets\predictions-comparrison.png>)
+- **Valores Reais vs. Previsões:**  
+  ![Comparação de Previsões](<assets\predictions-comparrison.png>)
 
-### Summary of Findings
+### Resumo dos Resultados
 
-- **Best Performance:**  
-  The **single_15** model was the closest to the real values, with the **single_50** model also delivering very similar results.
+- **Melhor Desempenho:**  
+  O modelo **single_15** apresentou resultados mais próximos dos valores reais, com o modelo **single_50** também demonstrando desempenho muito semelhante.
 
-- **Stability vs. Accuracy:**  
-  The **double_15** model, although slightly less accurate, produced more stable prediction lines.
+- **Estabilidade vs. Precisão:**  
+  O modelo **double_15**, apesar de ser um pouco menos preciso, produziu linhas de previsão mais estáveis.
 
-- **Underperformance:**  
-  The **double_50** model did not perform well; its predictions were significantly off compared to the other models.
+- **Desempenho Inferior:**  
+  O modelo **double_50** apresentou o pior desempenho, com previsões significativamente distantes em relação aos outros modelos.
 
-- **Overall Insight:**  
-  Despite experimenting with various architectures, none of the models managed to closely match the true stock prices, indicating that further tuning or more complex architectures might be necessary to improve forecasting accuracy.
+- **Insight Geral:**  
+  Apesar da experimentação com diversas arquiteturas, nenhum dos modelos conseguiu capturar com precisão os valores reais das ações, indicando que um ajuste mais fino ou o uso de arquiteturas mais complexas pode ser necessário para melhorar a acurácia das previsões.
 
+## O Que Aprendi
 
-## What I Learned
+- A eficácia das RNNs com GRU na modelagem de dados complexos de séries temporais.  
+- O papel crítico do pré-processamento detalhado dos dados para aprimorar o desempenho do modelo.  
+- Insights sobre a dinâmica das tendências e volatilidade do mercado de ações.  
+- A importância do ajuste e validação dos modelos de deep learning em conjuntos de dados financeiros.
 
-- The effectiveness of GRU RNNs in modeling complex time-series data.
-- The critical role of thorough data preprocessing in enhancing model performance.
-- Insights into the dynamics of stock market trends and volatility.
-- The importance of tuning and validating deep learning models on financial datasets.
+## Habilidades Praticadas
 
-## Skills Practiced
+- Design de Deep Learning e Redes Neurais  
+- Análise e Previsão de Séries Temporais  
+- Visualização de Dados e Análise Estatística  
+- Programação em Python e Implantação de Modelos  
+- Pesquisa e Análise Crítica de Dados Financeiros
 
-- Deep Learning and Neural Network Design
-- Time-Series Data Analysis and Forecasting
-- Data Visualization and Statistical Analysis
-- Python Programming and Model Deployment
-- Research and Critical Analysis of Financial Data
+## Conclusão
 
-## Conclusion
+Este projeto demonstra o potencial e os desafios de utilizar RNNs com GRU para a previsão dos preços das ações com base em dados históricos do Google. Embora os modelos de camada única (particularmente **single_15** e **single_50**) tenham obtido previsões mais próximas dos valores reais, nenhuma das configurações conseguiu capturar perfeitamente a dinâmica do mercado. Esses insights ressaltam a necessidade de explorar mais a fundo as arquiteturas de modelos e o ajuste dos hiperparâmetros para melhorar o desempenho.
 
-This project demonstrates the potential and challenges of using GRU RNNs for forecasting stock prices with historical data from Google. While the single-layer models (particularly single_15 and single_50) yielded predictions closest to the real values, none of the configurations perfectly captured the true dynamics of the market. These insights highlight the need for further exploration into model architectures and hyperparameter tuning for improved performance.
+## Contato
 
+Se você tiver alguma dúvida ou feedback, sinta-se à vontade para entrar em contato:  
+[GitHub](https://github.com/faduzin) | [LinkedIn](https://www.linkedin.com/in/ericfadul/) | [eric.fadul@gmail.com](mailto:eric.fadul@gmail.com)
 
-## Contact
+## Contribuições
 
-For any questions, suggestions, or further discussion, please feel free to open an issue on the repository or contact me via my [GitHub profile](https://github.com/faduzin).
+- Tayenne Euqueres
+- William de Oliveira Silva
 
-## Repository Structure
+## Estrutura do Repositório
 
 ```bash
-├── assets/ # Supplementary assets (e.g., images, charts) 
-├── data/ # Raw and processed data files 
-├── notebooks/ # Jupyter notebooks
-├── src/ # Source code for model training and evaluation 
-├── .gitignore # Git ignore file to exclude unnecessary files 
-├── LICENSE # License information (MIT) 
-├── README.md # Project documentation and overview 
-└── requirements.txt # List of Python dependencies
+├── assets/           # Recursos suplementares (ex.: imagens, gráficos)
+├── data/             # Arquivos de dados brutos e processados
+├── notebooks/        # Notebooks Jupyter
+├── src/              # Código fonte para treinamento e avaliação do modelo
+├── .gitignore        # Arquivo para ignorar arquivos desnecessários
+├── LICENSE           # Informações sobre a licença (MIT)
+├── README.md         # Documentação e visão geral do projeto
+└── requirements.txt  # Lista de dependências do Python
 ```
-This structure keeps the project organized and facilitates easy navigation through the code, data, and analysis resources.
+Esta estrutura mantém o projeto organizado e facilita a navegação pelo código, dados e recursos de análise.
