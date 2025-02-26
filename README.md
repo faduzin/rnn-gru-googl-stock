@@ -128,21 +128,21 @@ Esta seção descreve a análise experimental onde foram treinadas e comparadas 
 A seguir, seguem os espaços reservados para as imagens das curvas de perda de cada configuração de modelo (na seguinte ordem):
 
 1. **Curva de Perda - Única Camada GRU com 15 Unidades (single_15):**  
-   ![Curva de Perda - Single_15](<assets\single_layer_15_gru_loss.png>)
+   ![Curva de Perda - Single_15](<assets/single_layer_15_gru_loss.png>)
 
 2. **Curva de Perda - Única Camada GRU com 50 Unidades (single_50):**  
-   ![Curva de Perda - Single_50](<assets\single_layer_50_gru_loss.png>)
+   ![Curva de Perda - Single_50](<assets/single_layer_50_gru_loss.png>)
 
 3. **Curva de Perda - Duas Camadas GRU com 15 Unidades (double_15):**  
-   ![Curva de Perda - Double_15](<assets\double_layer_15_gru_loss.png>)
+   ![Curva de Perda - Double_15](<assets/double_layer_15_gru_loss.png>)
 
 4. **Curva de Perda - Duas Camadas GRU com 50 Unidades (double_50):**  
-   ![Curva de Perda - Double_50](<assets\double_layer_50_gru_loss.png>)
+   ![Curva de Perda - Double_50](<assets/double_layer_50_gru_loss.png>)
 
 Por fim, a imagem a seguir mostra um gráfico comparativo com os valores reais e as previsões de cada modelo:
 
 - **Valores Reais vs. Previsões:**  
-  ![Comparação de Previsões](<assets\predictions-comparrison.png>)
+  ![Comparação de Previsões](<assets/predictions-comparrison.png>)
 
 ### Resumo dos Resultados
 
